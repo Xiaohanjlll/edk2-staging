@@ -112,7 +112,17 @@ CompareMem (
   IN UINTN       Length
   )
 {
-  return memcmp (DestinationBuffer, SourceBuffer, Length);
+  if ((Length == 0) || (DestinationBuffer == SourceBuffer)) {
+    return 0;
+  }
+  while ((--Length != 0) &&
+         (*(INT8 *)DestinationBuffer == *(INT8 *)SourceBuffer))
+  {
+    DestinationBuffer = (INT8 *)DestinationBuffer + 1;
+    SourceBuffer      = (INT8 *)SourceBuffer + 1;
+  }
+
+  return (INTN)*(UINT8 *)DestinationBuffer - (INTN)*(UINT8 *)SourceBuffer;
 }
 
 BOOLEAN
